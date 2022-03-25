@@ -9,12 +9,12 @@ public class King extends Piece{
     }
 
     @Override
-    protected Piece createNewPiece(Position to) {
-        return new King(getColor(), to);
+    protected boolean isPossibleMovement(Position to) {
+        return getPosition().isAdjacent(to);
     }
 
     @Override
-    public boolean isPossibleMovement(Position to) {
-        return getPosition().isAdjacent(to);
+    protected Piece createTransferredPiece(Position to) {
+        return new King(getColor(), to);
     }
 }

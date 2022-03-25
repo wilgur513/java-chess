@@ -3,6 +3,7 @@ package chess.piece;
 import static chess.position.File.*;
 import static chess.position.Rank.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.position.Position;
 import java.util.stream.Stream;
@@ -19,8 +20,7 @@ class RookTest {
     void moveRookCollinearPositionUnlimitedDistance(Position from, Position to) {
         Rook rook = new Rook(Color.BLACK, from);
 
-        assertThat(rook.isPossibleMovement(to))
-            .isTrue();
+        assertThat(rook.transfer(to)).isEqualTo(new Rook(Color.BLACK, to));
     }
 
     private static Stream<Arguments> provideMoveCollinearRook() {
@@ -38,8 +38,7 @@ class RookTest {
     void throwExceptionWhenRookMoveInvalidPosition(Position from, Position to) {
         Rook rook = new Rook(Color.BLACK, from);
 
-        assertThat(rook.isPossibleMovement(to))
-            .isFalse();
+        assertThatThrownBy(() -> rook.transfer(to)).isInstanceOf(IllegalArgumentException.class);
     }
 
     private static Stream<Arguments> provideInvalidMoveRook() {

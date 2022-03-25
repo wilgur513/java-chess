@@ -3,6 +3,7 @@ package chess.piece;
 import static chess.position.File.*;
 import static chess.position.Rank.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.position.Position;
 import java.util.stream.Stream;
@@ -19,7 +20,8 @@ class BishopTest {
     void throwExceptionInvalidMoveBishop(Position from, Position to) {
         Bishop bishop = new Bishop(Color.BLACK, from);
 
-        assertThat(bishop.isPossibleMovement(to)).isFalse();
+        assertThatThrownBy(() -> bishop.transfer(to))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     private static Stream<Arguments> provideInvalidMoveBishop() {
@@ -37,7 +39,7 @@ class BishopTest {
     void moveCrossBishop(Position from, Position to) {
         Bishop bishop = new Bishop(Color.BLACK, from);
 
-        assertThat(bishop.isPossibleMovement(to)).isTrue();
+        assertThat(bishop.transfer(to)).isEqualTo(new Bishop(Color.BLACK, to));
     }
 
     private static Stream<Arguments> provideCrossMoveBishop() {

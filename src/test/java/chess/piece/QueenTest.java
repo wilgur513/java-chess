@@ -3,6 +3,7 @@ package chess.piece;
 import static chess.position.File.*;
 import static chess.position.Rank.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.position.Position;
 import java.util.stream.Stream;
@@ -19,8 +20,7 @@ class QueenTest {
     void moveInvalidMoveQueen(Position from, Position to) {
         Queen queen = new Queen(Color.BLACK, from);
 
-        assertThat(queen.isPossibleMovement(to))
-            .isFalse();
+        assertThatThrownBy(() -> queen.transfer(to)).isInstanceOf(IllegalArgumentException.class);
     }
 
     private static Stream<Arguments> provideInvalidMoveQueen() {
@@ -38,8 +38,7 @@ class QueenTest {
     void moveCrossOrSameRowOrColMoveQueen(Position from, Position to) {
         Queen queen = new Queen(Color.BLACK, from);
 
-        assertThat(queen.isPossibleMovement(to))
-            .isTrue();
+        assertThat(queen.transfer(to)).isEqualTo(new Queen(Color.BLACK, to));
     }
 
     private static Stream<Arguments> provideValidMoveQueen() {

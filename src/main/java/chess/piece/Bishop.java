@@ -9,12 +9,12 @@ public class Bishop extends Piece {
     }
 
     @Override
-    protected Piece createNewPiece(Position to) {
-        return new Bishop(getColor(), to);
+    protected boolean isPossibleMovement(Position to) {
+        return getPosition().isDiagonalWay(to);
     }
 
     @Override
-    public boolean isPossibleMovement(Position to) {
-        return getPosition().isDiagonalWay(to);
+    protected Piece createTransferredPiece(Position to) {
+        return new Bishop(getColor(), to);
     }
 }

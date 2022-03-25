@@ -8,7 +8,7 @@ public class InputView {
 
     public static String inputCommand() {
         String command = SCANNER.nextLine();
-        if (command.equals("start") || command.equals("end")) {
+        if (command.equals("start") || command.equals("end") || command.startsWith("move")) {
             return command;
         }
         throw new IllegalArgumentException("[ERROR] 잘못된 명령어를 입력하셨습니다.");

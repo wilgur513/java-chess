@@ -1,17 +1,10 @@
 package chess.piece;
 
 import chess.position.Position;
-import chess.position.Rank;
 
 public enum Color {
 
-    BLACK(Rank.SEVEN), WHITE(Rank.TWO);
-
-    private Rank rankOfStartPawn;
-
-    Color(Rank rankOfStartPawn) {
-        this.rankOfStartPawn = rankOfStartPawn;
-    }
+    BLACK, WHITE;
 
     public boolean isForward(Position from, Position to) {
         if (this == WHITE) {
@@ -25,9 +18,5 @@ public enum Color {
             return BLACK;
         }
         return WHITE;
-    }
-
-    public boolean isStartPawnPosition(Position position) {
-        return position.isSameRank(rankOfStartPawn);
     }
 }

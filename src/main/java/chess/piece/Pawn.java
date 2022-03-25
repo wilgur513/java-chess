@@ -1,44 +1,57 @@
 package chess.piece;
 
+import static chess.piece.Color.WHITE;
+
 import chess.position.Position;
+import chess.position.Rank;
 
 public class Pawn extends Piece {
+
+    private static final Rank BLACK_PAWN_START_RANK = Rank.SEVEN;
+    private static final Rank WHITE_PAWN_START_RANK = Rank.TWO;
 
     public Pawn(Color color, Position position) {
         super(color, position);
     }
 
     @Override
-    protected Piece createNewPiece(Position to) {
-        return new Pawn(getColor(), to);
+    protected boolean isPossibleMovement(Position to) {
+        return isCapturablePosition(to) || isMovablePosition(to);
     }
 
     @Override
-    public boolean isPossibleMovement(Position to) {
-        return getPosition().isVerticalWay(to) && isForward(getPosition(), to) && isValidDistance(getPosition(), to);
+    public boolean isCapturablePosition(Position to) {
+        return isForward(to) && getPosition().isDiagonalWay(to) && getPosition().getVerticalDistance(to) == 1;
     }
 
-    @Override
-    public boolean isPawn() {
-        return true;
+    private boolean isForward(Position to) {
+        return getColor().isForward(getPosition(), to);
     }
 
-    private boolean isForward(Position from, Position to) {
-        return getColor().isForward(from, to);
+    private boolean isMovablePosition(Position to) {
+        return isForward(to) && getPosition().isVerticalWay(to) && isValidDistance(to);
     }
 
-    private boolean isValidDistance(Position from, Position to) {
-        return from.getVerticalDistance(to) <= movableDistance(from);
+    private boolean isValidDistance(Position to) {
+        return getPosition().getVerticalDistance(to) <= movableDistance();
     }
 
-    private int movableDistance(Position from) {
-        if (isStartPawnPosition(from)) {
+    private int movableDistance() {
+        if (isStartPawnPosition()) {
             return 2;
         }
         return 1;
     }
 
-    private boolean isStartPawnPosition(Position from) {
-        return getColor().isStartPawnPosition(from);
+    private boolean isStartPawnPosition() {
+        if (getColor() == WHITE) {
+            return getPosition().isSameRank(WHITE_PAWN_START_RANK);
+        }
+        return getPosition().isSameRank(BLACK_PAWN_START_RANK);
+    }
+
+    @Override
+    protected Piece createTransferredPiece(Position to) {
+        return new Pawn(getColor(), to);
     }
 }

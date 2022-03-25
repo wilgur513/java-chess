@@ -14,15 +14,28 @@ public abstract class Piece {
     }
 
     public Piece transfer(Position to) {
-        return createNewPiece(to);
+        if (getPosition().equals(to)) {
+            throw new IllegalArgumentException("동일한 위치로 기물을 이동시킬 수 없습니다.");
+        }
+
+        if (!isPossibleMovement(to)) {
+            throw new IllegalArgumentException(String.format(
+                "%s 기물을 %s에서 %s로 이동할 수 없습니다.", getClass().getSimpleName(), position, to));
+        }
+
+        return createTransferredPiece(to);
+    }
+
+    public boolean isCapturablePosition(Position to) {
+        return isPossibleMovement(to);
     }
 
     public boolean isSameColor(Color color) {
         return this.color == color;
     }
 
-    public boolean isPawn() {
-        return false;
+    public boolean isSamePosition(Position position) {
+        return this.position.equals(position);
     }
 
     public Color getColor() {
@@ -31,10 +44,6 @@ public abstract class Piece {
 
     public Position getPosition() {
         return position;
-    }
-
-    public boolean isSamePosition(Position position) {
-        return this.position.equals(position);
     }
 
     @Override
@@ -46,22 +55,15 @@ public abstract class Piece {
             return false;
         }
         Piece piece = (Piece) o;
-        return color == piece.color;
+        return color == piece.color && Objects.equals(position, piece.position);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(color, getClass());
+        return Objects.hash(color, position);
     }
 
-    @Override
-    public String toString() {
-        return "Piece{" +
-            "color=" + color +
-            ", type=" + getClass().getSimpleName();
-    }
+    protected abstract Piece createTransferredPiece(Position to);
 
-    protected abstract Piece createNewPiece(Position to);
-
-    public abstract boolean isPossibleMovement(Position to);
+    protected abstract boolean isPossibleMovement(Position to);
 }

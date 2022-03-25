@@ -4,6 +4,7 @@ import static chess.position.File.A;
 import static chess.position.File.B;
 import static chess.position.Rank.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.position.Position;
 import java.util.stream.Stream;
@@ -21,8 +22,7 @@ class PawnTest {
     void movePawn(Color color, Position from, Position to) {
         Pawn pawn = new Pawn(color, from);
 
-        assertThat(pawn.isPossibleMovement(to))
-            .isTrue();
+        assertThat(pawn.transfer(to)).isEqualTo(new Pawn(color, to));
     }
 
     private static Stream<Arguments> provideFirstMoveForwardPawn() {
@@ -39,8 +39,8 @@ class PawnTest {
     void throwExceptionMovePawnOverTwoSpaceWhenFirstMove() {
         Pawn pawn = new Pawn(Color.BLACK, new Position(A, SEVEN));
 
-        assertThat(pawn.isPossibleMovement(new Position(A, FOUR)))
-            .isFalse();
+        assertThatThrownBy(() -> pawn.transfer(new Position(A, FOUR)))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @ParameterizedTest
@@ -49,8 +49,8 @@ class PawnTest {
     void throwExceptionMovePawnOverOneSpaceAfterFirstMove(Color color, Position from, Position to) {
         Pawn pawn = new Pawn(color, from);
 
-        assertThat(pawn.isPossibleMovement(to))
-            .isFalse();
+        assertThatThrownBy(() -> pawn.transfer(to))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     private static Stream<Arguments> provideInvalidMoveForwardPawn() {
@@ -66,8 +66,8 @@ class PawnTest {
     void throwExceptionMovePawnBackward(Color color, Position from, Position to) {
         Pawn pawn = new Pawn(color, from);
 
-        assertThat(pawn.isPossibleMovement(to))
-            .isFalse();
+        assertThatThrownBy(() -> pawn.transfer(to))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     private static Stream<Arguments> provideMoveBackwardPawn() {
@@ -83,13 +83,12 @@ class PawnTest {
     void throwExceptionPawnMoveSide(Position from, Position to) {
         Pawn pawn = new Pawn(Color.WHITE, from);
 
-        assertThat(pawn.isPossibleMovement(to))
-            .isFalse();
+        assertThatThrownBy(() -> pawn.transfer(to))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     private static Stream<Arguments> provideMoveSidePawn() {
         return Stream.of(
-            Arguments.of(new Position(A, TWO), new Position(B, THREE)),
             Arguments.of(new Position(A, TWO), new Position(B, TWO)),
             Arguments.of(new Position(B, TWO), new Position(A, TWO))
         );

@@ -9,12 +9,12 @@ public class Rook extends Piece{
     }
 
     @Override
-    protected Piece createNewPiece(Position to) {
-        return new Rook(getColor(), to);
+    protected boolean isPossibleMovement(Position to) {
+        return getPosition().isVerticalWay(to) || getPosition().isHorizontalWay(to);
     }
 
     @Override
-    public boolean isPossibleMovement(Position to) {
-        return getPosition().isVerticalWay(to) || getPosition().isHorizontalWay(to);
+    protected Piece createTransferredPiece(Position to) {
+        return new Rook(getColor(), to);
     }
 }
